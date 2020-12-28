@@ -11,7 +11,6 @@
 // constructor WITHOUT memory allocation
 ChatBot::ChatBot()
 {
-     std::cout << "ChatBot Constructor invalid" << std::endl;
     // invalidate data handles
     _image = nullptr;
     _chatLogic = nullptr;
@@ -58,16 +57,17 @@ ChatBot& ChatBot::operator=(ChatBot const& source)
 }
 
 ChatBot::ChatBot(ChatBot && source):  _currentNode(source._currentNode), _rootNode(source._rootNode)
-, _chatLogic(source._chatLogic)
+, _chatLogic(source._chatLogic), _image(source._image)
 {
     std::cout << "Chatbot move constructor"  <<  std::endl;
 
-
     _chatLogic->SetChatbotHandle(this);
-    source._image = NULL;
-    source._currentNode = nullptr;
-    source._rootNode =  nullptr;
-    source._chatLogic = nullptr;
+
+    // invalidate data handles
+   source._image = NULL;
+   source._chatLogic = nullptr;
+   source._rootNode = nullptr;
+   source._currentNode = nullptr;
 }
 
 ChatBot& ChatBot::operator=(ChatBot && source)
@@ -157,8 +157,6 @@ void ChatBot::SetCurrentNode(GraphNode *node)
     std::mt19937 generator(int(std::time(0)));
     std::uniform_int_distribution<int> dis(0, answers.size() - 1);
     std::string answer = answers.at(dis(generator));
-
-    std::cout << "sending msg to chat logic" << std::endl;
     // send selected node answer to user
     _chatLogic->SendMessageToUser(answer);
 }
